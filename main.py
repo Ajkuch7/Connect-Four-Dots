@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Jonathan De Leon && Ethan Beaver
+# Ajay Ajkuch7 && Ethan Beaver
 # CPTR 430 Artificial Intelligence
 # Final Project
 # June 6, 2018
@@ -308,7 +308,7 @@ if __name__ == "__main__":
         game = Game(game_board)
 
         while not game.is_game_over():
-            
+
             game.next_turn()
             print_board(game.current_state)
             GUI.drawBoard(game.board)
