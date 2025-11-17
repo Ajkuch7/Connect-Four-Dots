@@ -306,7 +306,9 @@ if __name__ == "__main__":
         GUI.updateDisplay()
         # Start game data structure
         game = Game(game_board)
+
         while not game.is_game_over():
+            
             game.next_turn()
             print_board(game.current_state)
             GUI.drawBoard(game.board)
