@@ -56,3 +56,4 @@ print(f"Plain Minimax (depth 5):    {metrics_pm5['nodes_explored']} nodes explor
 print(f"Plain Minimax (depth 6):    {metrics_pm6['nodes_explored']} nodes explored, {time_pm6:.4f}s")
 print(f"\nSpeedup (AlphaBeta vs Plain d6): {time_pm6 / time_ab:.2f}x faster")
 print(f"Node reduction (AlphaBeta vs Plain d7 equivalent): {(1 - metrics_ab['nodes_explored'] / (metrics_pm6['nodes_explored'] * 1.5)) * 100:.1f}% fewer (rough estimate)")
+
