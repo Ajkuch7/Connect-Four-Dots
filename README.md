@@ -1,69 +1,79 @@
-# Connect Four AI: A Minimax Approach
+# Connect Four AI
 
-Project was completed for *CPTR 430 Artificial Intelligence* at Walla Walla University.
+This repository implements a Connect Four game with an AI opponent using a bitboard representation and depth‑limited minimax search. The project includes a Pygame GUI, a headless runner for automated matches, and simple instrumentation so you can compare Alpha‑Beta pruning vs plain minimax.
 
-## Game Overview
+Key features
 
-Connect Four is a two player connection game on a *6x7* board. The goal of the game is to strategically insert a disk in one of the seven columns giving you a higher chance to connect 4 disks by row, column, or diagonal. Players alternate turns. 
+- Bitboard board representation (compact and fast bitwise win checks)
+- Minimax with Alpha‑Beta pruning (configurable depth)
+- Plain Minimax (no pruning) for comparison
+- Headless runner to run AI vs AI matches (`headless_runner.py`)
+- Quick metrics test script (`test_metrics.py`) to show nodes explored / time
+- Pygame GUI with the ability to choose AI algorithm before play
 
-Connect Four is a solved game. With perfect play, the first player always wins.
+Note: The GUI borrows images and layout ideas from the "Four in a Row" example but the AI and wiring were implemented as part of this project.
 
-## Minimax with alpha-beta pruning
+## Requirements
 
-There are *4,531,985,219,092* possible unique states of the board. This makes it difficult to brute force the game tree. Thus, we used the minimax algorithm with alpha-beta pruning. 
+- Python 3.8+ recommended (tested with Python 3.13 and pygame 2.6)
+- pygame (modern version; requirements.txt originally pinned an old pygame that may not build on modern toolchains)
 
-Minimax contains two levels: *MAX* level and *MIN* level. The *MAX* node chooses its maximum value from its children, while the *MIN* node chooses its minimum value from its children. Alpha-beta pruning allows us to abandon *(prune)* subtrees that will not influence the final decision because its heuristic value is not within the boundary window between alpha and beta. 
+Install:
 
-Alpha is the lower bound where beta is the upper bound. Alpha value is the minimum score that the maximizing player is assured of. Beta value is the maximum score that the minimizing player is assured of.
-
-### Score Function
-
-The algorithm above requires a score to be evaluated based on a given state. Our score function only evalulates leaf nodes as follows:
-
-* If leaf is a win: positive score resulting from 22 - number of moves played
-* If leaf is a loss: negative score resulting from 22 - number of moves played by opponent
-* If leaf is a draw: score is 0
-
-### Implementation
-
-A bitboard is used to represent the state of the board. It maintains the position of the AI and the position of the game. Using a *Bitwise XOR*, we can retrieve the position of the opponent. Other bitwise operations allow the algorithm to determine if a move is valid or if a position is in a draw or winning state.
-
-```
- -  -   -   -   -   -   -
- 5  12  19  26  33  40  47
- 4  11  18  25  32  39  46
- 3  10  17  24  31  38  45
- 2  9   16  23  30  37  44
- 1  8   15  22  29  36  43
- 0  7   14  21  28  35  42
+```powershell
+python -m pip install -r requirements.txt
+# If requirements.txt contains an old pygame and fails to build, install a modern pygame manually, e.g.:
+python -m pip install pygame
 ```
 
-The GUI uses **Pygame**  and borrows mouse interactions, board layout, and images from [Four in a Row](http://inventwithpython.com/blog/2011/06/10/new-game-source-code-four-in-a-row/​). 
+## How to run
 
-## Getting Started
+GUI (play locally):
 
-The project was completed in *python 3.6* and uses the **Pygame** library
-
-### Install Requirements
-
-1. Activate python virtualenv (Recommended)
-2. Install python packages `pip install -r requirements.txt`
-
-### Run 
-```python
-python3 main.py
+```powershell
+cd path\to\connect-four-ai
+python .\main.py
 ```
 
-### How To Play
+When prompted you can choose the AI algorithm:
 
-By default, AI (**BLACK**) will start and place its token. To place your token, drag the **RED** token above the column where you want to place it. Follow the same process until you or the AI wins.
+- Enter `1` for AlphaBeta (default) — stronger and uses pruning
+- Enter `2` for Plain Minimax (no pruning) — useful for comparison / debugging
 
-> NOTE: There is a delay (lag) when you place your token. The animations need improvement.
+Headless AI vs AI matches (no GUI):
 
-## Code Libraries
-- [Four in a Row](http://inventwithpython.com/blog/2011/06/10/new-game-source-code-four-in-a-row/​)
-- [Pygame](https://www.pygame.org/)
+```powershell
+python .\headless_runner.py
+```
+
+This runs a small series of automated games (configurable in the file) and prints win counts, average moves and time per move.
+
+Quick metrics (single-position profiling):
+
+```powershell
+python .\test_metrics.py
+```
+
+Shows nodes explored, nodes pruned (if any), and elapsed time for the searches.
+
+## Files of interest
+
+- `main.py` — entry point and GUI glue; contains the `Game` and `State` classes
+- `fourInARowGUI/` — Pygame GUI code and image resources
+- `core.py` — (added) pure game/search logic used by headless runner
+- `headless_runner.py` — run AI vs AI matches without the GUI
+- `test_metrics.py` — quick profiler for node counts and timing
+- `requirements.txt` — Python dependencies (may need updating on modern systems)
 
 ## Authors
-- [Jonathan De Leon](https://www.github.com/JonathanDeLeon)
-- [Ethan Beaver](https://www.github.com/ethanbeaver)
+
+- [Ajay Ajkuch7](https://github.com/Ajkuch7)
+- [Aadil shakya](https://github.com/aadilshakya)
+
+## Notes and tips
+
+- Alpha‑Beta pruning does not change the chosen move if both searches run to the same depth — it only prunes irrelevant subtrees and therefore runs faster or enables deeper search in the same time budget.
+- If you plan to run many automated matches or increase depths, prefer running the headless runner so the GUI does not slow the experiment.
+- If you want me to add Negamax+transposition table or an MCTS player, I can implement and wire them into the headless runner for direct comparisons.
+
+If anything in this README should be more specific to your workflow (different Python path, extra scripts, or CI instructions), tell me and I'll update it.

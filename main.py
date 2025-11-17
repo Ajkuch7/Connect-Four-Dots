@@ -84,8 +84,7 @@ class Game:
 
         GUI.dropHumanToken(self.board, column)
 
-        new_position, new_game_position = make_move(self.current_state.player_position,
-                                                    self.current_state.game_position, column)
+        new_position, new_game_position = make_move(self.current_state.player_position,self.current_state.game_position, column)
         self.current_state = State(self.current_state.ai_position, new_game_position, self.current_state.depth + 1)
 
     def query_AI(self):
